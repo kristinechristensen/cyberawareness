@@ -46,8 +46,8 @@ Each of the 16 MBTI types includes:
 
 ---
 
-## Personality Compass - Adult Edition
-
+## Personality Type - Adult Edition
+[Link to Personality Type - Adult Edition] (adultPersonality.html) 
 ### Overview
 A sophisticated MBTI personality assessment designed for professional adults, featuring workplace scenarios, leadership contexts, and career-focused insights.
 
