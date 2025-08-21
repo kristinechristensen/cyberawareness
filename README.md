@@ -13,8 +13,8 @@ A comprehensive suite of three interactive personality assessment tools designed
 
 ---
 
-## Personality Compass - High School Edition
-
+## Personality Type - High School Edition
+➡️[Launch the High School Personality TypeAsessment](highSchoolPersonality.html) 
 ### Overview
 An interactive MBTI-based personality assessment specifically designed for high school students with age-appropriate language, scenarios, and results descriptions.
 
@@ -47,7 +47,7 @@ Each of the 16 MBTI types includes:
 ---
 
 ## Personality Type - Adult Edition
-[Link to Personality Type - Adult Edition] (adultPersonality.html) 
+➡️[Launch the Adult Personality TypeAsessment](adultPersonality.html) 
 ### Overview
 A sophisticated MBTI personality assessment designed for professional adults, featuring workplace scenarios, leadership contexts, and career-focused insights.
 
@@ -81,7 +81,7 @@ Each of the 16 MBTI types includes:
 ---
 
 ## 16 Personality Types & NICE Cybersecurity Framework Matcher
-
+➡️[Launch the Matcher](NICEMatch.html) 
 ### Overview
 A specialized career guidance tool that combines MBTI personality assessment with the official NICE (National Initiative for Cybersecurity Education) Cybersecurity Workforce Framework to match personality types with cybersecurity career paths.
 
