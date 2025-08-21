@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16 Personality Types Matched to NICE Cybersecurity Framework</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1e3c72 25%, #2a5298 75%, #c0392b 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f1419 0%, #1e3c72 50%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .selection-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #1e3c72;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .dropdown-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        select {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #2a5298;
+            border-radius: 10px;
+            background: white;
+            color: #1e3c72;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #c0392b;
+            box-shadow: 0 0 15px rgba(192, 57, 43, 0.3);
+        }
+
+        select:hover {
+            border-color: #c0392b;
+        }
+
+        .results {
+            display: none;
+            margin-top: 40px;
+        }
+
+        .results.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .personality-profile {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .personality-profile h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            font-weight: 300;
+        }
+
+        .personality-description {
+            font-size: 1.1em;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+
+        .traits-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .trait {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+
+        .cybersecurity-insights {
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .cybersecurity-insights h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cybersecurity-insights p {
+            line-height: 1.7;
+            opacity: 0.95;
+        }
+
+        .roles-section h3 {
+            color: #1e3c72;
+            font-size: 1.6em;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 3px solid #2a5298;
+            padding-bottom: 10px;
+        }
+
+        .role-match {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 1px solid #dee2e6;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .role-match:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .role-match::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+        }
+
+        .role-match.excellent::before {
+            background: linear-gradient(135deg, #0f1419 0%, #1e3c72 100%);
+        }
+
+        .role-match.high::before {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+
+        .role-match.good::before {
+            background: linear-gradient(135deg, #2a5298 0%, #3498db 100%);
+        }
+
+        .role-match.moderate::before {
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+        }
+
+        .role-match.fair::before {
+            background: linear-gradient(135deg, #7f8c8d 0%, #95a5a6 100%);
+        }
+
+        .role-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .role-title {
+            font-size: 1.3em;
+            color: #1e3c72;
+            font-weight: 600;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .match-score {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85em;
+            color: white;
+            white-space: nowrap;
+        }
+
+        .match-score.excellent {
+            background: linear-gradient(135deg, #0f1419 0%, #1e3c72 100%);
+        }
+
+        .match-score.high {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+
+        .match-score.good {
+            background: linear-gradient(135deg, #2a5298 0%, #3498db 100%);
+        }
+
+        .match-score.moderate {
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+        }
+
+        .match-score.fair {
+            background: linear-gradient(135deg, #7f8c8d 0%, #95a5a6 100%);
+        }
+
+        .role-specialty {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .role-description {
+            color: #5d6d7e;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .role-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .detail-section h4 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .detail-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .detail-section li {
+            color: #5d6d7e;
+            padding: 4px 0;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 0.9em;
+        }
+
+        .detail-section li:last-child {
+            border-bottom: none;
+        }
+
+        .references {
+            background: linear-gradient(135deg, #ecf0f1 0%, #d5dbdb 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+
+        .references h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .references p {
+            color: #5d6d7e;
+            line-height: 1.6;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .role-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .role-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .personality-profile {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 16 Personality Types & NICE Cybersecurity Framework</h1>
+            <p>Select your MBTI personality type to discover your cybersecurity behavioral profile and matched roles in the NICE Cybersecurity Workforce Framework. The NICE Framework organizes roles into 7 categories: Analyze (AN), Collect and Operate (CO), Investigate (IN), Operate and Maintain (OM), Oversee and Govern (OV), Protect and Defend (PR), and Securely Provision (SP).</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="selection-section">
+                <h2 class="section-title">Select Your MBTI Personality Type</h2>
+                <div class="dropdown-container">
+                    <select id="personalityType" onchange="showProfile()">
+                        <option value="" selected>Choose your personality type...</option>
+                        <option value="ISTJ">ISTJ - The Inspector</option>
+                        <option value="ISFJ">ISFJ - The Protector</option>
+                        <option value="INFJ">INFJ - The Advocate</option>
+                        <option value="INTJ">INTJ - The Architect</option>
+                        <option value="ISTP">ISTP - The Virtuoso</option>
+                        <option value="ISFP">ISFP - The Adventurer</option>
+                        <option value="INFP">INFP - The Mediator</option>
+                        <option value="INTP">INTP - The Logician</option>
+                        <option value="ESTP">ESTP - The Entrepreneur</option>
+                        <option value="ESFP">ESFP - The Entertainer</option>
+                        <option value="ENFP">ENFP - The Campaigner</option>
+                        <option value="ENTP">ENTP - The Debater</option>
+                        <option value="ESTJ">ESTJ - The Executive</option>
+                        <option value="ESFJ">ESFJ - The Consul</option>
+                        <option value="ENFJ">ENFJ - The Protagonist</option>
+                        <option value="ENTJ">ENTJ - The Commander</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="results" id="results">
+                <div class="personality-profile" id="personalityProfile">
+                    <!-- Personality profile will be populated here -->
+                </div>
+                
+                <div class="cybersecurity-insights" id="cyberInsights">
+                    <!-- Cybersecurity insights will be populated here -->
+                </div>
+                
+                <div class="roles-section">
+                    <h3>🎯 Your Best-Matched NICE Cybersecurity Roles</h3>
+                    <div id="matchResults">
+                        <!-- Results will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="references">
+                <h3>Research References</h3>
+                <p><strong>Primary Source:</strong> "Type and Cyber-Security" report by The Myers-Briggs Company - provides research-backed insights into personality-based cybersecurity behaviors and vulnerabilities.</p>
+                <p><strong>NICE Framework:</strong> Work roles from CISA NICE Cybersecurity Workforce Framework website.</p>
+                <p><strong>Career Matching:</strong> Additional insights from cybersecurity career development and personality assessment sources.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Research-backed personality data from Myers-Briggs cybersecurity study
+        const personalityTypes = {
+            'ISTJ': {
+                name: 'The Inspector',
+                description: 'Practical, reliable, detail-oriented, rule-following. Excellent at maintaining systems and following security procedures.',
+                traits: ['Practical', 'Reliable', 'Detail-oriented', 'Rule-following', 'Systematic'],
+                cyberInsights: 'Less likely to be caught twice by the same attack, good at spotting phishing, but may over-rely on past experience. High compliance with security policies and procedures.'
+            },
+            'ISFJ': {
+                name: 'The Protector',
+                description: 'Supportive, conscientious, detail-focused, loyal. Natural protectors who care about organizational security.',
+                traits: ['Supportive', 'Conscientious', 'Detail-focused', 'Loyal', 'Service-minded'],
+                cyberInsights: 'Trusting nature may lead to social engineering vulnerabilities; over-confident until affected personally. Strong at following protocols once established.'
+            },
+            'INFJ': {
+                name: 'The Advocate',
+                description: 'Insightful, idealistic, strategic, empathetic. Excellent at seeing big picture security implications.',
+                traits: ['Insightful', 'Idealistic', 'Strategic', 'Empathetic', 'Visionary'],
+                cyberInsights: 'May miss phishing details due to focus on bigger picture; internally focused, may delegate technical problems to others. Strong strategic thinking.'
+            },
+            'INTJ': {
+                name: 'The Architect',
+                description: 'Strategic, independent, analytical, visionary. Natural systems thinkers and security architects.',
+                traits: ['Strategic', 'Independent', 'Analytical', 'Visionary', 'Systems-focused'],
+                cyberInsights: 'High on knowledge-informed carefulness, avoids password reuse, but may ignore illogical rules. Excellent at threat modeling and strategic security planning.'
+            },
+            'ISTP': {
+                name: 'The Virtuoso',
+                description: 'Practical, analytical, adaptable, independent. Excellent hands-on problem solvers and troubleshooters.',
+                traits: ['Practical', 'Analytical', 'Adaptable', 'Independent', 'Technical'],
+                cyberInsights: 'Aware of policies but bends illogical rules; naturally cautious with technology. Excellent at incident response and technical problem-solving.'
+            },
+            'ISFP': {
+                name: 'The Adventurer',
+                description: 'Flexible, empathetic, practical, value-driven. Good at user-focused security implementations.',
+                traits: ['Flexible', 'Empathetic', 'Practical', 'Value-driven', 'User-focused'],
+                cyberInsights: 'Follows rules well but vulnerable to trusted contact attacks. Strong attention to detail in familiar systems.'
+            },
+            'INFP': {
+                name: 'The Mediator',
+                description: 'Idealistic, creative, empathetic, flexible. Excellent at creating user-friendly security solutions.',
+                traits: ['Idealistic', 'Creative', 'Empathetic', 'Flexible', 'Values-driven'],
+                cyberInsights: 'Not natural rule-followers; security compliance improves significantly when aligned with personal values and organizational mission.'
+            },
+            'INTP': {
+                name: 'The Logician',
+                description: 'Innovative, analytical, independent, logical. Natural researchers and security technology innovators.',
+                traits: ['Innovative', 'Analytical', 'Independent', 'Logical', 'Research-oriented'],
+                cyberInsights: 'Highest on knowledge-informed carefulness; very knowledgeable about security but may not follow rules strictly. Excellent at security research and analysis.'
+            },
+            'ESTP': {
+                name: 'The Entrepreneur',
+                description: 'Bold, practical, adaptable, action-oriented. Excel in high-pressure security situations.',
+                traits: ['Bold', 'Practical', 'Adaptable', 'Action-oriented', 'Crisis-ready'],
+                cyberInsights: 'Least likely to follow security rules; tends to see breaches as PR issues rather than technical problems. Strong in crisis response and incident management.'
+            },
+            'ESFP': {
+                name: 'The Entertainer',
+                description: 'Sociable, spontaneous, practical, empathetic. Good at security awareness and training roles.',
+                traits: ['Sociable', 'Spontaneous', 'Practical', 'Empathetic', 'People-focused'],
+                cyberInsights: 'Overly trusting and may be complacent about threats; surprisingly high on password security practices. Excel at security awareness training.'
+            },
+            'ENFP': {
+                name: 'The Campaigner',
+                description: 'Enthusiastic, creative, sociable, flexible. Excellent at security awareness campaigns and innovation.',
+                traits: ['Enthusiastic', 'Creative', 'Sociable', 'Flexible', 'Innovative'],
+                cyberInsights: 'Quick to notice changes in systems but dislikes rigid security structure; vulnerable to emotionally manipulative attacks. Strong at security awareness initiatives.'
+            },
+            'ENTP': {
+                name: 'The Debater',
+                description: 'Innovative, quick-witted, debating, adaptable. Natural penetration testers and security researchers.',
+                traits: ['Innovative', 'Quick-witted', 'Debating', 'Adaptable', 'Challenge-seeking'],
+                cyberInsights: 'Independent mindset, often ignores security rules; may supply sensitive information hastily during discussions. Excellent at finding security vulnerabilities.'
+            },
+            'ESTJ': {
+                name: 'The Executive',
+                description: 'Organized, practical, decisive, rule-oriented. Natural security managers and compliance officers.',
+                traits: ['Organized', 'Practical', 'Decisive', 'Rule-oriented', 'Leadership'],
+                cyberInsights: 'High on following security rules and processes; may over-trust established systems and procedures. Excellent at security governance and compliance.'
+            },
+            'ESFJ': {
+                name: 'The Consul',
+                description: 'Sociable, responsible, cooperative, practical. Strong at team-based security initiatives.',
+                traits: ['Sociable', 'Responsible', 'Cooperative', 'Practical', 'Team-focused'],
+                cyberInsights: 'Supportive and rule-following, but people-oriented nature may make them vulnerable to social engineering attacks. Strong at security training and support roles.'
+            },
+            'ENFJ': {
+                name: 'The Protagonist',
+                description: 'Charismatic, empathetic, organized, inspirational. Excellent security leaders and trainers.',
+                traits: ['Charismatic', 'Empathetic', 'Organized', 'Inspirational', 'People-focused'],
+                cyberInsights: 'Naturally motivates teams around security initiatives; aligns security practices with organizational values and people needs. Strong security leadership and culture building.'
+            },
+            'ENTJ': {
+                name: 'The Commander',
+                description: 'Assertive, strategic, leadership-oriented, efficient. Natural cybersecurity executives and program leaders.',
+                traits: ['Assertive', 'Strategic', 'Leadership-oriented', 'Efficient', 'Goal-focused'],
+                cyberInsights: 'Strategic and commanding approach to security; excels in security management but may overlook technical details. Strong at high-level security program leadership.'
+            }
+        };
+
+        // Enhanced NICE Framework roles with research-backed matching
+        const niceRoles = {
+            'Systems Security Analyst': {
+                specialty: 'Operate and Maintain (OM)',
+                description: 'Responsible for the analysis and development of the integration, testing, operations, and maintenance of systems security.',
+                keySkills: ['Security Analysis', 'System Monitoring', 'Rule Implementation', 'Process Management'],
+                workEnvironment: ['Methodical analysis', 'Rule-based processes', 'System maintenance'],
+                personalityMatch: { ISTJ: 95, ISFJ: 85, INTJ: 80, ESTJ: 75, INFJ: 70, ESFJ: 65, INTP: 60, ISTP: 55, ENTJ: 50, ENFJ: 45, ISFP: 40, INFP: 35, ENTP: 30, ESTP: 25, ENFP: 20, ESFP: 15 }
+            },
+            'Security Control Assessor': {
+                specialty: 'Oversee and Govern (OV)',
+                description: 'Conducts independent comprehensive assessments of the management, operational, and technical security controls.',
+                keySkills: ['Compliance Assessment', 'Standards Knowledge', 'Documentation', 'Risk Assessment'],
+                workEnvironment: ['Compliance focus', 'Standards-based work', 'Detailed assessment'],
+                personalityMatch: { ISTJ: 95, INTJ: 85, ISFJ: 80, ESTJ: 75, INFJ: 70, ESFJ: 65, INTP: 60, ISTP: 55, ENTJ: 50, ENFJ: 45, ISFP: 40, INFP: 35, ENTP: 30, ESTP: 25, ENFP: 20, ESFP: 15 }
+            },
+            'Cyber Defense Analyst': {
+                specialty: 'Protect and Defend (PR)',
+                description: 'Uses defensive measures and information collected from a variety of sources to identify, analyze, and report events.',
+                keySkills: ['Threat Analysis', 'Network Monitoring', 'Incident Detection', 'Defense Coordination'],
+                workEnvironment: ['Security monitoring', 'Methodical defense', 'Pattern recognition'],
+                personalityMatch: { ISTJ: 90, ISFJ: 85, INTJ: 80, INFJ: 75, ESTJ: 70, ISTP: 65, ESFJ: 60, INTP: 55, ENTJ: 50, ENFJ: 45, ISFP: 40, INFP: 35, ENTP: 30, ESTP: 25, ENFP: 20, ESFP: 15 }
+            },
+            'Customer Service and Technical Support': {
+                specialty: 'Operate and Maintain (OM)',
+                description: 'Addresses problems; installs, configures, troubleshoots, and provides maintenance and training.',
+                keySkills: ['Customer Service', 'Technical Support', 'Problem Resolution', 'Training'],
+                workEnvironment: ['User interaction', 'Support protocols', 'Service-oriented'],
+                personalityMatch: { ISFJ: 95, ESFJ: 90, ISFP: 80, ESTJ: 75, ENFJ: 70, ISTJ: 65, ESFP: 60, INFJ: 55, ENFP: 50, INTJ: 45, INTP: 40, ISTP: 35, ENTJ: 30, ENTP: 25, ESTP: 20 }
+            },
+            'Knowledge Manager': {
+                specialty: 'Operate and Maintain (OM)',
+                description: 'Responsible for the management and administration of processes and tools that enable the organization to identify, document, and access intellectual capital.',
+                keySkills: ['Information Management', 'Process Documentation', 'Knowledge Systems', 'Training Support'],
+                workEnvironment: ['Information organization', 'Process management', 'Knowledge sharing'],
+                personalityMatch: { ISFJ: 90, INFJ: 85, ESFJ: 80, ENFJ: 75, ISTJ: 70, ESTJ: 65, INTJ: 60, ISFP: 55, ENFP: 50, INTP: 45, ISTP: 40, INFP: 35, ENTJ: 30, ENTP: 25, ESTP: 20, ESFP: 15 }
+            },
+            'Training, Education, and Awareness Specialist': {
+                specialty: 'Oversee and Govern (OV)',
+                description: 'Conducts training of personnel within pertinent subject domain. Develops, plans, coordinates, and evaluates training courses, methods, and techniques.',
+                keySkills: ['Training Development', 'Education Design', 'Awareness Campaigns', 'Communication'],
+                workEnvironment: ['Training delivery', 'Educational development', 'Awareness building'],
+                personalityMatch: { ENFJ: 95, ESFJ: 90, ISFJ: 85, ENFP: 80, ESFP: 75, INFJ: 70, ESTJ: 65, ISTJ: 60, ENTJ: 55, ISFP: 50, INFP: 45, INTP: 40, ISTP: 35, ENTP: 30, INTJ: 25, ESTP: 20 }
+            },
+            'Strategic Planning and Policy Analyst': {
+                specialty: 'Oversee and Govern (OV)',
+                description: 'Develops and maintains cybersecurity plans, strategy, and policy to support and align with organizational cybersecurity initiatives.',
+                keySkills: ['Strategic Planning', 'Policy Development', 'Vision Alignment', 'Long-term Planning'],
+                workEnvironment: ['Strategic thinking', 'Policy development', 'Vision implementation'],
+                personalityMatch: { INTJ: 95, INFJ: 90, ENTJ: 85, ENFJ: 80, INTP: 70, ENTP: 65, ISTJ: 60, ESTJ: 55, ISFJ: 50, ESFJ: 45, ISTP: 40, ISFP: 35, INFP: 30, ENFP: 25, ESTP: 20, ESFP: 15 }
+            },
+            'Mission Assessment Specialist': {
+                specialty: 'Analyze (AN)',
+                description: 'Develops assessment plans and measures of performance/effectiveness. Conducts strategic and operational effectiveness assessments.',
+                keySkills: ['Mission Analysis', 'Assessment Planning', 'Strategic Evaluation', 'Performance Measurement'],
+                workEnvironment: ['Strategic assessment', 'Mission evaluation', 'Insight development'],
+                personalityMatch: { INFJ: 90, INTJ: 85, ENFJ: 80, ENTJ: 75, INTP: 70, ENTP: 65, ISTJ: 60, ESTJ: 55, ISFJ: 50, ESFJ: 45, ISTP: 40, ISFP: 35, INFP: 30, ENFP: 25, ESTP: 20, ESFP: 15 }
+            },
+            'Legal Advice and Advocacy Specialist': {
+                specialty: 'Oversee and Govern (OV)',
+                description: 'Provides legally sound advice and recommendations to leadership and staff on a variety of relevant topics.',
+                keySkills: ['Legal Analysis', 'Ethical Guidance', 'Policy Interpretation', 'Advisory Services'],
+                workEnvironment: ['Legal consultation', 'Ethical guidance', 'Policy advisory'],
+                personalityMatch: { INFJ: 95, INTJ: 85, ENFJ: 80, ENTJ: 75, ISTJ: 70, ESTJ: 65, ISFJ: 60, ESFJ: 55, INTP: 50, ENTP: 45, ISFP: 40, INFP: 35, ISTP: 30, ENFP: 25, ESTP: 20, ESFP: 15 }
+            },
+            'Cyber Operator': {
+                specialty: 'Collect and Operate (CO)',
+                description: 'Conducts collection, processing, and/or geolocation of systems to exploit, locate, and/or track targets of interest.',
+                keySkills: ['Technical Operations', 'Hands-on Implementation', 'System Exploitation', 'Tactical Execution'],
+                workEnvironment: ['Technical operations', 'Hands-on work', 'Tactical execution'],
+                personalityMatch: { ISTP: 95, ESTP: 85, INTP: 75, ENTP: 70, INTJ: 65, ISTJ: 60, ENTJ: 55, ESTJ: 50, ISFP: 45, INFP: 40, ISFJ: 35, INFJ: 30, ENFP: 25, ESFJ: 20, ENFJ: 15, ESFP: 10 }
+            },
+            'Cyber Defense Incident Responder': {
+                specialty: 'Protect and Defend (PR)',
+                description: 'Investigates, analyzes, and responds to cyber incidents within the network environment or enclave.',
+                keySkills: ['Incident Response', 'Crisis Management', 'Technical Troubleshooting', 'Logical Analysis'],
+                workEnvironment: ['Crisis response', 'Technical troubleshooting', 'Incident management'],
+                personalityMatch: { ISTP: 90, ESTP: 85, INTJ: 75, ENTJ: 70, ISTJ: 65, ESTJ: 60, INTP: 55, ENTP: 50, ISFJ: 45, INFJ: 40, ESFJ: 35, ENFJ: 30, ISFP: 25, INFP: 20, ENFP: 15, ESFP: 10 }
+            },
+            'Exploitation Analyst': {
+                specialty: 'Analyze (AN)',
+                description: 'Collaborates to identify access and collection gaps that can be satisfied through cyber collection and/or preparation activities.',
+                keySkills: ['Technical Analysis', 'Exploitation Techniques', 'Gap Analysis', 'Security Testing'],
+                workEnvironment: ['Technical analysis', 'Security testing', 'Research-focused'],
+                personalityMatch: { ISTP: 95, INTP: 90, ENTP: 80, INTJ: 75, ESTP: 70, ENTJ: 60, ISTJ: 55, ESTJ: 50, INFJ: 45, ENFJ: 40, ISFJ: 35, ESFJ: 30, ISFP: 25, INFP: 20, ENFP: 15, ESFP: 10 }
+            },
+            'Data Analyst': {
+                specialty: 'Operate and Maintain (OM)',
+                description: 'Examines data from multiple disparate sources with the goal of providing security and privacy insight.',
+                keySkills: ['Data Analysis', 'Pattern Recognition', 'Statistical Analysis', 'Attention to Detail'],
+                workEnvironment: ['Data analysis', 'Pattern recognition', 'Detailed investigation'],
+                personalityMatch: { ISFP: 85, ISTJ: 80, ISFJ: 75, INTJ: 70, INFJ: 65, ISTP: 60, ESTJ: 55, ESFJ: 50, INTP: 45, ENTJ: 40, ENFJ: 35, ENTP: 30, ESTP: 25, INFP: 20, ENFP: 15, ESFP: 10 }
+            },
+            'Systems Administrator': {
+                specialty: 'Operate and Maintain (OM)',
+                description: 'Responsible for setting up and maintaining a system or specific components of a system.',
+                keySkills: ['System Administration', 'Practical Implementation', 'Maintenance', 'Technical Support'],
+                workEnvironment: ['System maintenance', 'Practical implementation', 'Technical support'],
+                personalityMatch: { ISFP: 90, ISTJ: 85, ISTP: 80, ISFJ: 75, ESTJ: 70, ESFJ: 65, INTJ: 60, INTP: 55, ENTJ: 50, ENFJ: 45, ENTP: 40, ESTP: 35, INFP: 30, ENFP: 25, ESFP: 20 }
+            },
+            'Cyber Defense Forensics Analyst': {
+                specialty: 'Investigate (IN)',
+                description: 'Analyzes digital evidence and investigates computer security incidents to derive information in support of system/network vulnerability mitigation.',
+                keySkills: ['Digital Forensics', 'Investigation', 'Evidence Analysis', 'Attention to Detail'],
+                workEnvironment: ['Forensic investigation', 'Evidence analysis', 'Detailed examination'],
+                personalityMatch: { ISFP: 85, ISTJ: 80, INTJ: 75, ISFJ: 70, INFJ: 65, ISTP: 60, ESTJ: 55, INTP: 50, ESFJ: 45, ENTJ: 40, ENFJ: 35, ENTP: 30, ESTP: 25, INFP: 20, ENFP: 15, ESFP: 10 }
+            },
+            'Research & Development Specialist': {
+                specialty: 'Securely Provision (SP)',
+                description: 'Conducts software and systems engineering and software systems research to develop new capabilities.',
+                keySkills: ['Research', 'Innovation', 'Creative Problem Solving', 'Technical Development'],
+                workEnvironment: ['Research and development', 'Innovation projects', 'Creative exploration'],
+                personalityMatch: { INFP: 95, INTP: 90, ENFP: 85, ENTP: 80, INTJ: 75, ISFP: 70, INFJ: 65, ENTJ: 60, ENFJ: 55, ISTP: 50, ISTJ: 45, ESTJ: 40, ISFJ: 35, ESFJ: 30, ESTP: 25, ESFP: 20 }
+            },
+            'All-Source Analyst': {
+                specialty: 'Analyze (AN)',
+                description: 'Analyzes data/information from one or multiple sources to conduct preparation of the environment, respond to requests for information, and submit intelligence collection and production requirements.',
+                keySkills: ['Multi-source Analysis', 'Logical Reasoning', 'Complex Problem Solving', 'Information Synthesis'],
+                workEnvironment: ['Complex analysis', 'Multi-source research', 'Logical investigation'],
+                personalityMatch: { INTP: 95, INTJ: 90, INFJ: 80, ENTP: 75, INFP: 70, ISTJ: 65, ISFJ: 60, ENTJ: 55, ENFJ: 50, ISTP: 45, ISFP: 40, ESTJ: 35, ESFJ: 30, ENFP: 25, ESTP: 20, ESFP: 15 }
+            },
+            'Software Developer': {
+                specialty: 'Securely Provision (SP)',
+                description: 'Develops, creates, maintains, and writes/implements the computer instructions to tell the computer what to do.',
+                keySkills: ['Programming', 'Software Development', 'Innovation', 'Technical Problem Solving'],
+                workEnvironment: ['Software development', 'Technical innovation', 'Problem solving'],
+                personalityMatch: { INTP: 95, INTJ: 85, ISTP: 80, ENTP: 75, INFP: 70, ENFP: 65, ISTJ: 60, ISFP: 55, ENTJ: 50, INFJ: 45, ESTJ: 40, ISFJ: 35, ENFJ: 30, ESFJ: 25, ESTP: 20, ESFP: 15 }
+            },
+            'Target Network Analyst': {
+                specialty: 'Analyze (AN)',
+                description: 'Conducts advanced analysis of collection and open-source data to ensure target continuity; to profile targets and their activities.',
+                keySkills: ['Network Analysis', 'Deep Research', 'Technical Investigation', 'Pattern Analysis'],
+                workEnvironment: ['Deep technical research', 'Network analysis', 'Investigation work'],
+                personalityMatch: { INTP: 95, INTJ: 90, ISTP: 80, ENTP: 75, INFJ: 70, INFP: 65, ISTJ: 60, ISFP: 55, ENTJ: 50, ENFP: 45, ISFJ: 40, ESTJ: 35, ENFJ: 30, ESFJ: 25, ESTP: 20, ESFP: 15 }
+            },
+            'Vulnerability Assessment Analyst': {
+                specialty: 'Protect and Defend (PR)',
+                description: 'Performs assessments of systems and networks within the network environment or enclave and identifies where those systems/networks deviate from acceptable configurations.',
+                keySkills: ['Vulnerability Assessment', 'Penetration Testing', 'Security Testing', 'Dynamic Problem Solving'],
+                workEnvironment: ['Security testing', 'Vulnerability assessment', 'Active testing'],
+                personalityMatch: { ESTP: 95, ENTP: 90, ISTP: 85, INTP: 80, ENTJ: 75, INTJ: 70, ENFP: 65, ESTJ: 60, INFP: 55, ISTJ: 50, ISFP: 45, INFJ: 40, ISFJ: 35, ENFJ: 30, ESFJ: 25, ESFP: 20 }
+            },
+            'Cyber Crime Investigator': {
+                specialty: 'Investigate (IN)',
+                description: 'Identifies, collects, examines, and preserves evidence using controlled and documented analytical and investigative techniques.',
+                keySkills: ['Criminal Investigation', 'Evidence Collection', 'Quick Action', 'Crisis Response'],
+                workEnvironment: ['Investigation work', 'Crisis response', 'Evidence collection'],
+                personalityMatch: { ESTP: 90, ENTJ: 85, ESTJ: 80, ISTP: 75, ENTP: 70, INTJ: 65, ISTJ: 60, ENFJ: 55, ESFJ: 50, ISFJ: 45, INFJ: 40, INTP: 35, ENFP: 30, ISFP: 25, INFP: 20, ESFP: 15 }
+            },
+            'Network Operations Specialist': {
+                specialty: 'Operate and Maintain (OM)',
+                description: 'Plans, implements, and operates network services/systems, to include hardware and virtual environments.',
+                keySkills: ['Network Operations', 'Team Collaboration', 'Technical Support', 'Operations Management'],
+                workEnvironment: ['Team-based operations', 'Network management', 'Collaborative work'],
+                personalityMatch: { ESFP: 90, ESFJ: 85, ISFJ: 80, ENFP: 75, ISFP: 70, ESTJ: 65, ISTJ: 60, ENFJ: 55, ISTP: 50, ENTJ: 45, INTJ: 40, INTP: 35, ENTP: 30, INFJ: 25, INFP: 20, ESTP: 15 }
+            },
+            'Cyber Operations Planner': {
+                specialty: 'Collect and Operate (CO)',
+                description: 'Develops detailed intelligence preparation of the environment and conducts detailed mission planning for cyber operations.',
+                keySkills: ['Creative Planning', 'Strategic Thinking', 'Innovation', 'Mission Development'],
+                workEnvironment: ['Creative planning', 'Strategic development', 'Innovation work'],
+                personalityMatch: { ENFP: 95, ENTP: 90, INFP: 85, ENFJ: 80, INTP: 75, INTJ: 70, INFJ: 65, ENTJ: 60, ISFP: 55, ESFP: 50, ISTP: 45, ISTJ: 40, ESTJ: 35, ISFJ: 30, ESFJ: 25, ESTP: 20 }
+            },
+            'Program Manager': {
+                specialty: 'Oversee and Govern (OV)',
+                description: 'Leads, coordinates, communicates, integrates and is accountable for the overall success of the program.',
+                keySkills: ['Program Leadership', 'Enthusiastic Management', 'Team Coordination', 'Strategic Integration'],
+                workEnvironment: ['Program leadership', 'Team management', 'Strategic coordination'],
+                personalityMatch: { ENFP: 90, ENTJ: 85, ENFJ: 80, ENTP: 75, ESTJ: 70, ESFJ: 65, INTJ: 60, INFJ: 55, ESFP: 50, ISTJ: 45, ISFJ: 40, ISTP: 35, INTP: 30, ISFP: 25, INFP: 20, ESTP: 15 }
+            },
+            'Test and Evaluation Specialist': {
+                specialty: 'Securely Provision (SP)',
+                description: 'Develops and conducts tests of systems to evaluate compliance with specifications and requirements.',
+                keySkills: ['Testing Innovation', 'System Evaluation', 'Challenge-based Testing', 'Creative Problem Solving'],
+                workEnvironment: ['Innovative testing', 'System challenges', 'Creative evaluation'],
+                personalityMatch: { ENTP: 95, ENFP: 85, INTP: 80, ESTP: 75, ENTJ: 70, ISTP: 65, INTJ: 60, ENFJ: 55, ESTJ: 50, ISTJ: 45, ESFP: 40, INFP: 35, ISFP: 30, ISFJ: 25, ESFJ: 20, INFJ: 15 }
+            },
+            'Information Systems Security Manager': {
+                specialty: 'Oversee and Govern (OV)',
+                description: 'Responsible for the cybersecurity of a program, organization, system, or enclave.',
+                keySkills: ['Security Management', 'Compliance Leadership', 'Process Management', 'Systematic Oversight'],
+                workEnvironment: ['Security management', 'Compliance oversight', 'Systematic leadership'],
+                personalityMatch: { ESTJ: 95, ENTJ: 90, ISTJ: 85, ESFJ: 80, ENFJ: 75, ISFJ: 70, INTJ: 65, INFJ: 60, ENTP: 55, ISTP: 50, INTP: 45, ENFP: 40, ESTP: 35, ISFP: 30, INFP: 25, ESFP: 20 }
+            },
+            'Cybersecurity Management': {
+                specialty: 'Oversee and Govern (OV)',
+                description: 'Leads and manages comprehensive cybersecurity programs and initiatives across the organization.',
+                keySkills: ['Strategic Leadership', 'Program Management', 'Executive Communication', 'Vision Implementation'],
+                workEnvironment: ['Strategic leadership', 'Executive management', 'Program oversight'],
+                personalityMatch: { ENTJ: 95, ENFJ: 90, ESTJ: 85, INTJ: 80, ESFJ: 75, ENTP: 70, INFJ: 65, ENFP: 60, ISTJ: 55, ISFJ: 50, INTP: 45, ISTP: 40, ESFP: 35, ESTP: 30, ISFP: 25, INFP: 20 }
+            }
+        };
+
+        function showProfile() {
+            const select = document.getElementById("personalityType");
+            const resultsDiv = document.getElementById("results");
+            const profileDiv = document.getElementById("personalityProfile");
+            const cyberInsights = document.getElementById("cyberInsights");
+            const matchResults = document.getElementById("matchResults");
+
+            const selectedType = select.value;
+
+            if (selectedType === "") {
+                resultsDiv.classList.remove("show");
+                return;
+            }
+
+            const personalityInfo = personalityTypes[selectedType];
+            
+            // Display personality profile
+            const traitsHTML = personalityInfo.traits.map(trait => `<span class="trait">${trait}</span>`).join('');
+            
+            profileDiv.innerHTML = `
+                <h2>${selectedType} - ${personalityInfo.name}</h2>
+                <p class="personality-description">${personalityInfo.description}</p>
+                <div class="traits-container">${traitsHTML}</div>
+            `;
+
+            // Display cybersecurity insights
+            cyberInsights.innerHTML = `
+                <h3>🔍 Your Cybersecurity Behavioral Profile</h3>
+                <p><strong>Research-Based Insights:</strong> ${personalityInfo.cyberInsights}</p>
+            `;
+
+            // Calculate and display matches
+            const results = [];
+            
+            Object.entries(niceRoles).forEach(([roleName, roleData]) => {
+                const matchScore = roleData.personalityMatch[selectedType] || 0;
+                results.push({
+                    name: roleName,
+                    data: roleData,
+                    score: matchScore
+                });
+            });
+
+            // Sort by match score
+            results.sort((a, b) => b.score - a.score);
+
+            // Display only top matches (score >= 60)
+            const topMatches = results.filter(match => match.score >= 60);
+            
+            matchResults.innerHTML = '';
+            
+            topMatches.forEach(match => {
+                const matchLevel = getMatchLevel(match.score);
+                const roleElement = document.createElement('div');
+                roleElement.className = `role-match ${matchLevel.class}`;
+                
+                const skillsHTML = match.data.keySkills.map(skill => `<li>${skill}</li>`).join('');
+                const environmentHTML = match.data.workEnvironment.map(env => `<li>${env}</li>`).join('');
+                
+                roleElement.innerHTML = `
+                    <div class="role-header">
+                        <h3 class="role-title">${match.name}</h3>
+                        <span class="match-score ${matchLevel.class}">${match.score}% Match</span>
+                    </div>
+                    <div class="role-specialty">NICE Specialty Area: ${match.data.specialty}</div>
+                    <div class="role-description">${match.data.description}</div>
+                    <div class="role-details">
+                        <div class="detail-section">
+                            <h4>Key Skills Required</h4>
+                            <ul>${skillsHTML}</ul>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Work Environment</h4>
+                            <ul>${environmentHTML}</ul>
+                        </div>
+                    </div>
+                `;
+                
+                matchResults.appendChild(roleElement);
+            });
+
+            resultsDiv.classList.add('show');
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Determine match level based on score
+        function getMatchLevel(score) {
+            if (score >= 90) return { class: 'excellent', label: 'Excellent Match' };
+            if (score >= 80) return { class: 'high', label: 'High Match' };
+            if (score >= 70) return { class: 'good', label: 'Good Match' };
+            if (score >= 60) return { class: 'moderate', label: 'Moderate Match' };
+            return { class: 'fair', label: 'Fair Match' };
+        }
+    </script>
+</body>
+</html>

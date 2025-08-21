@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personality Compass</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1e3c72 25%, #2a5298 75%, #c0392b 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+        }
+
+        .question {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #1e3c72;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .option:hover {
+            background: #e3f2fd;
+            border-color: #2a5298;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(42, 82, 152, 0.2);
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            border-color: #1e3c72;
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.2);
+        }
+
+        .option-text {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            color: #2c3e50;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #2a5298, #3498db);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            background: #95a5a6;
+        }
+
+        .results {
+            display: none;
+            text-align: center;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .personality-type {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #1e3c72;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .type-name {
+            font-size: 1.8rem;
+            color: #1e3c72;
+            margin-bottom: 20px;
+        }
+
+        .type-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .dimensions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .dimension {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #1e3c72;
+        }
+
+        .dimension-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .dimension-score {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2a5298;
+        }
+
+        .restart-btn {
+            background: linear-gradient(45deg, #c0392b, #e74c3c);
+            margin-top: 20px;
+        }
+
+        .restart-btn:hover {
+            background: linear-gradient(45deg, #e74c3c, #ec7063);
+        }
+
+        .question-counter {
+            text-align: center;
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .question {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧭 Personality Compass</h1>
+            <p>Discover your unique personality dimensions</p>
+        </div>
+
+        <div class="card">
+            <div id="quiz-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+                <div class="question-counter">
+                    <span id="current-question">1</span> of <span id="total-questions">40</span>
+                </div>
+
+                <!-- Questions will be inserted here -->
+                <div class="question-container active" data-question="0">
+                    <div class="question">When faced with a problem, you typically:</div>
+                    <div class="options">
+                        <div class="option" data-dimension="thinking" data-value="1">
+                            <div class="option-text">Analyze all available data and create a logical plan</div>
+                        </div>
+                        <div class="option" data-dimension="feeling" data-value="1">
+                            <div class="option-text">Consider how it affects people and trust your instincts</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="navigation">
+                    <button class="btn" id="prev-btn" onclick="previousQuestion()" disabled>Previous</button>
+                    <button class="btn" id="next-btn" onclick="nextQuestion()" disabled>Next</button>
+                </div>
+            </div>
+
+            <div class="results" id="results">
+                <h2>Your Personality Type</h2>
+                <div class="personality-type" id="personality-code"></div>
+                <div class="type-name" id="type-name"></div>
+                <div class="type-description" id="type-description"></div>
+                
+                <div class="dimensions" id="dimensions-display"></div>
+                
+                <button class="btn restart-btn" onclick="restartQuiz()">Take Quiz Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                text: "When faced with a problem, you typically:",
+                options: [
+                    { text: "Analyze all available data and create a logical plan", dimension: "thinking", value: 1 },
+                    { text: "Consider how it affects people and trust your instincts", dimension: "feeling", value: 1 }
+                ]
+            },
+            {
+                text: "In social situations, you usually:",
+                options: [
+                    { text: "Feel energized and seek out conversations", dimension: "extroversion", value: 1 },
+                    { text: "Prefer meaningful one-on-one interactions", dimension: "introversion", value: 1 }
+                ]
+            },
+            {
+                text: "When learning something new, you prefer:",
+                options: [
+                    { text: "Concrete examples and practical applications", dimension: "sensing", value: 1 },
+                    { text: "Abstract concepts and theoretical frameworks", dimension: "intuition", value: 1 }
+                ]
+            },
+            {
+                text: "Your ideal weekend would involve:",
+                options: [
+                    { text: "A planned itinerary with scheduled activities", dimension: "judging", value: 1 },
+                    { text: "Keeping options open and going with the flow", dimension: "perceiving", value: 1 }
+                ]
+            },
+            {
+                text: "When making important decisions, you:",
+                options: [
+                    { text: "Focus on logical consequences and efficiency", dimension: "thinking", value: 1 },
+                    { text: "Consider personal values and impact on relationships", dimension: "feeling", value: 1 }
+                ]
+            },
+            {
+                text: "At parties, you're more likely to:",
+                options: [
+                    { text: "Mingle with many different people", dimension: "extroversion", value: 1 },
+                    { text: "Have deep conversations with a few close friends", dimension: "introversion", value: 1 }
+                ]
+            },
+            {
+                text: "You tend to focus on:",
+                options: [
+                    { text: "What is real and tangible right now", dimension: "sensing", value: 1 },
+                    { text: "Future possibilities and hidden meanings", dimension: "intuition", value: 1 }
+                ]
+            },
+            {
+                text: "Your workspace is typically:",
+                options: [
+                    { text: "Organized with everything in its proper place", dimension: "judging", value: 1 },
+                    { text: "Creatively chaotic but you know where things are", dimension: "perceiving", value: 1 }
+                ]
+            },
+            {
+                text: "When giving feedback, you emphasize:",
+                options: [
+                    { text: "Objective analysis and areas for improvement", dimension: "thinking", value: 1 },
+                    { text: "Encouragement and personal growth", dimension: "feeling", value: 1 }
+                ]
+            },
+            {
+                text: "After a long day, you recharge by:",
+                options: [
+                    { text: "Going out with friends or engaging in social activities", dimension: "extroversion", value: 1 },
+                    { text: "Spending quiet time alone or with close family", dimension: "introversion", value: 1 }
+                ]
+            },
+            {
+                text: "When reading a story, you're drawn to:",
+                options: [
+                    { text: "Realistic plots with believable characters", dimension: "sensing", value: 1 },
+                    { text: "Imaginative worlds with symbolic meaning", dimension: "intuition", value: 1 }
+                ]
+            },
+            {
+                text: "You prefer to:",
+                options: [
+                    { text: "Have closure and reach definitive conclusions", dimension: "judging", value: 1 },
+                    { text: "Keep exploring options and stay flexible", dimension: "perceiving", value: 1 }
+                ]
+            },
+            {
+                text: "In conflicts, you typically:",
+                options: [
+                    { text: "Focus on facts and logical solutions", dimension: "thinking", value: 1 },
+                    { text: "Seek harmony and understanding between people", dimension: "feeling", value: 1 }
+                ]
+            },
+            {
+                text: "You feel most comfortable:",
+                options: [
+                    { text: "Being the center of attention in groups", dimension: "extroversion", value: 1 },
+                    { text: "Observing and contributing thoughtfully", dimension: "introversion", value: 1 }
+                ]
+            },
+            {
+                text: "When solving problems, you rely on:",
+                options: [
+                    { text: "Proven methods and past experience", dimension: "sensing", value: 1 },
+                    { text: "Innovation and novel approaches", dimension: "intuition", value: 1 }
+                ]
+            },
+            {
+                text: "You work best with:",
+                options: [
+                    { text: "Clear deadlines and structured timelines", dimension: "judging", value: 1 },
+                    { text: "Flexible schedules and spontaneous inspiration", dimension: "perceiving", value: 1 }
+                ]
+            },
+            {
+                text: "When criticized, you first:",
+                options: [
+                    { text: "Evaluate if the criticism is logically valid", dimension: "thinking", value: 1 },
+                    { text: "Consider the relationship and emotional context", dimension: "feeling", value: 1 }
+                ]
+            },
+            {
+                text: "You gain insights through:",
+                options: [
+                    { text: "External discussion and brainstorming with others", dimension: "extroversion", value: 1 },
+                    { text: "Internal reflection and quiet contemplation", dimension: "introversion", value: 1 }
+                ]
+            },
+            {
+                text: "You trust:",
+                options: [
+                    { text: "What you can observe and verify", dimension: "sensing", value: 1 },
+                    { text: "Your hunches and intuitive insights", dimension: "intuition", value: 1 }
+                ]
+            },
+            {
+                text: "You feel satisfied when:",
+                options: [
+                    { text: "Tasks are completed and goals are achieved", dimension: "judging", value: 1 },
+                    { text: "You've explored new possibilities and learned something", dimension: "perceiving", value: 1 }
+                ]
+            },
+            {
+                text: "When planning a vacation, you prefer to:",
+                options: [
+                    { text: "Research all activities and book everything in advance", dimension: "judging", value: 1 },
+                    { text: "Pick a destination and figure things out as you go", dimension: "perceiving", value: 1 }
+                ]
+            },
+            {
+                text: "In team meetings, you:",
+                options: [
+                    { text: "Speak up frequently and think out loud", dimension: "extroversion", value: 1 },
+                    { text: "Listen carefully and contribute when you have something valuable to say", dimension: "introversion", value: 1 }
+                ]
+            },
+            {
+                text: "When explaining something to others, you use:",
+                options: [
+                    { text: "Step-by-step instructions and concrete examples", dimension: "sensing", value: 1 },
+                    { text: "Big picture concepts and analogies", dimension: "intuition", value: 1 }
+                ]
+            },
+            {
+                text: "You make your best decisions when you:",
+                options: [
+                    { text: "Remove emotions and focus on objective criteria", dimension: "thinking", value: 1 },
+                    { text: "Consider what feels right and aligns with your values", dimension: "feeling", value: 1 }
+                ]
+            },
+            {
+                text: "When starting a new project, you:",
+                options: [
+                    { text: "Create a detailed timeline and break it into phases", dimension: "judging", value: 1 },
+                    { text: "Dive in and adapt your approach as you learn", dimension: "perceiving", value: 1 }
+                ]
+            },
+            {
+                text: "At work, you prefer:",
+                options: [
+                    { text: "Open offices where you can interact with colleagues", dimension: "extroversion", value: 1 },
+                    { text: "Private spaces where you can focus without interruption", dimension: "introversion", value: 1 }
+                ]
+            },
+            {
+                text: "When following directions, you prefer:",
+                options: [
+                    { text: "Detailed, specific instructions you can follow exactly", dimension: "sensing", value: 1 },
+                    { text: "General guidelines that give you room to improvise", dimension: "intuition", value: 1 }
+                ]
+            },
+            {
+                text: "When someone disagrees with you, you:",
+                options: [
+                    { text: "Present logical arguments and evidence", dimension: "thinking", value: 1 },
+                    { text: "Try to understand their perspective and find common ground", dimension: "feeling", value: 1 }
+                ]
+            },
+            {
+                text: "Your ideal work environment has:",
+                options: [
+                    { text: "Clear procedures and predictable routines", dimension: "judging", value: 1 },
+                    { text: "Variety and the freedom to change approaches", dimension: "perceiving", value: 1 }
+                ]
+            },
+            {
+                text: "When networking, you:",
+                options: [
+                    { text: "Enjoy meeting new people and expanding your contacts", dimension: "extroversion", value: 1 },
+                    { text: "Prefer to deepen relationships with people you already know", dimension: "introversion", value: 1 }
+                ]
+            },
+            {
+                text: "You learn best through:",
+                options: [
+                    { text: "Hands-on practice and real-world application", dimension: "sensing", value: 1 },
+                    { text: "Theoretical understanding and connecting concepts", dimension: "intuition", value: 1 }
+                ]
+            },
+            {
+                text: "When evaluating options, you prioritize:",
+                options: [
+                    { text: "Logic, efficiency, and objective outcomes", dimension: "thinking", value: 1 },
+                    { text: "Impact on people and personal meaning", dimension: "feeling", value: 1 }
+                ]
+            },
+            {
+                text: "You handle deadlines by:",
+                options: [
+                    { text: "Working steadily toward completion well in advance", dimension: "judging", value: 1 },
+                    { text: "Working best under pressure as the deadline approaches", dimension: "perceiving", value: 1 }
+                ]
+            },
+            {
+                text: "When learning about current events, you prefer:",
+                options: [
+                    { text: "Discussing them with others to hear different viewpoints", dimension: "extroversion", value: 1 },
+                    { text: "Reading and reflecting on them privately first", dimension: "introversion", value: 1 }
+                ]
+            },
+            {
+                text: "You're more interested in:",
+                options: [
+                    { text: "How things work and practical applications", dimension: "sensing", value: 1 },
+                    { text: "Why things exist and their deeper significance", dimension: "intuition", value: 1 }
+                ]
+            },
+            {
+                text: "When hiring someone, you focus on:",
+                options: [
+                    { text: "Skills, qualifications, and past performance", dimension: "thinking", value: 1 },
+                    { text: "Cultural fit and potential for growth", dimension: "feeling", value: 1 }
+                ]
+            },
+            {
+                text: "You prefer environments that are:",
+                options: [
+                    { text: "Structured with clear expectations and procedures", dimension: "judging", value: 1 },
+                    { text: "Flexible with room for spontaneity and change", dimension: "perceiving", value: 1 }
+                ]
+            },
+            {
+                text: "When brainstorming, you work best:",
+                options: [
+                    { text: "In groups where you can bounce ideas off others", dimension: "extroversion", value: 1 },
+                    { text: "Alone where you can think through ideas thoroughly", dimension: "introversion", value: 1 }
+                ]
+            },
+            {
+                text: "You pay most attention to:",
+                options: [
+                    { text: "Facts, details, and specific information", dimension: "sensing", value: 1 },
+                    { text: "Patterns, themes, and underlying possibilities", dimension: "intuition", value: 1 }
+                ]
+            },
+            {
+                text: "When something goes wrong, you:",
+                options: [
+                    { text: "Analyze what happened and how to prevent it", dimension: "thinking", value: 1 },
+                    { text: "Focus on supporting those affected and moving forward", dimension: "feeling", value: 1 }
+                ]
+            }
+        ];
+
+        const personalityTypes = {
+            "ESTP": { 
+                name: "The Dynamic Realist", 
+                description: "You thrive in dynamic, hands-on environments where you can solve immediate problems and connect with others through shared experiences. As a natural troubleshooter, you excel at crisis management and bringing energy to teams. You prefer action over lengthy planning and have a talent for reading people and situations quickly. Your adaptability and pragmatic approach make you excellent at finding practical solutions that work in the real world. You're most motivated when working on tangible projects with visible outcomes and prefer roles that offer variety and human interaction." 
+            },
+            "ENTP": { 
+                name: "The Innovative Connector", 
+                description: "You combine analytical thinking with social energy, creating novel solutions while building extensive networks. Your mind naturally sees patterns and possibilities that others miss, making you an excellent brainstormer and strategic thinker. You thrive on intellectual challenges and enjoy debating ideas to refine them. Your curiosity drives you to explore multiple interests, and you excel at inspiring others with your vision. You work best in environments that encourage innovation and give you the freedom to pursue new ideas. Your ability to connect concepts across different domains makes you a valuable catalyst for change." 
+            },
+            "ESTJ": { 
+                name: "The Organized Leader", 
+                description: "You're a natural leader who combines logical thinking with practical execution, excelling at organizing people and resources to achieve concrete goals. Your strength lies in creating efficient systems and ensuring projects are completed on time and within budget. You have a talent for seeing what needs to be done and mobilizing others to achieve it. Your direct communication style and decisive nature inspire confidence in your team. You thrive in structured environments with clear hierarchies and established procedures. Your ability to balance big-picture thinking with attention to detail makes you an effective manager and strategist." 
+            },
+            "ENTJ": { 
+                name: "The Strategic Commander", 
+                description: "You blend strategic thinking with natural leadership, excelling at long-term planning and inspiring others toward ambitious goals. Your vision extends far into the future, and you have the ability to break down complex objectives into actionable steps. You naturally take charge in situations and can rally people around a common purpose. Your analytical mind helps you identify inefficiencies and optimize systems for better performance. You're comfortable making tough decisions and thrive on challenges that others might find overwhelming. Your combination of strategic insight and leadership presence makes you a powerful force for organizational transformation." 
+            },
+            "ESFP": { 
+                name: "The Caring Pragmatist", 
+                description: "You're warm and practical, focusing on helping others in tangible ways while creating harmony in your environment. Your natural empathy allows you to understand what people need and find practical solutions to help them. You excel at reading emotional undercurrents and bringing people together through shared experiences. Your optimistic outlook and genuine care for others makes you a natural team builder and morale booster. You prefer hands-on work that has immediate positive impact on people's lives. Your ability to stay grounded while maintaining strong relationships makes you an invaluable team member and friend." 
+            },
+            "ENFP": { 
+                name: "The Empathetic Visionary", 
+                description: "You combine deep care for others with creative thinking, inspiring people toward meaningful possibilities and positive change. Your enthusiasm is contagious, and you have a gift for seeing potential in both ideas and people. You excel at bringing out the best in others and creating environments where everyone feels valued and heard. Your creativity flows freely when working on projects that align with your values. You thrive in collaborative settings where you can explore new ideas and help others grow. Your ability to see connections between seemingly unrelated concepts makes you an excellent innovator and change agent." 
+            },
+            "ESFJ": { 
+                name: "The Supportive Organizer", 
+                description: "You're naturally nurturing and organized, creating stable environments where people can thrive and reach their potential. Your strength lies in understanding what others need and creating systems to provide it consistently. You excel at building consensus and ensuring everyone feels included and valued. Your practical approach to helping others is complemented by your ability to organize resources and coordinate efforts. You have a talent for remembering important details about people and using that knowledge to provide personalized support. Your dedication to service and your organizational skills make you a cornerstone of any team or community." 
+            },
+            "ENFJ": { 
+                name: "The Inspiring Teacher", 
+                description: "You inspire others through your values-based approach, naturally developing people's potential and creating positive change in your community. Your ability to see the best in people and help them achieve it makes you a natural mentor and leader. You excel at communicating vision in ways that motivate and energize others. Your emotional intelligence allows you to navigate complex interpersonal dynamics and build strong, lasting relationships. You thrive when working on meaningful projects that benefit others and align with your deeply held values. Your combination of empathy, vision, and communication skills makes you a powerful force for positive transformation." 
+            },
+            "ISTP": { 
+                name: "The Thoughtful Analyst", 
+                description: "You're quietly competent and logical, preferring to work independently on practical problems with tangible solutions. Your analytical mind excels at understanding how things work and finding efficient ways to fix or improve them. You have a natural talent for troubleshooting and can quickly identify the root cause of problems. Your calm demeanor and practical approach make you reliable in crisis situations. You prefer to learn through hands-on experience and value autonomy in your work. Your ability to remain objective and focus on facts makes you an excellent problem-solver and technical expert." 
+            },
+            "INTP": { 
+                name: "The Independent Innovator", 
+                description: "You're a creative problem-solver who works best independently, developing innovative solutions through careful analysis and theoretical exploration. Your mind naturally seeks to understand underlying principles and patterns. You excel at seeing connections that others miss and can develop elegant solutions to complex problems. Your curiosity drives you to explore ideas deeply, and you enjoy the process of learning and discovery. You thrive in environments that give you intellectual freedom and minimal structure. Your ability to think outside conventional frameworks makes you a valuable contributor to research, strategy, and innovation initiatives." 
+            },
+            "ISTJ": { 
+                name: "The Systematic Planner", 
+                description: "You excel at creating organized systems and detailed plans, preferring to work methodically toward long-term goals with proven methods. Your reliability and consistency make you a trusted team member who others can count on. You have a talent for seeing projects through from start to finish and ensuring quality standards are maintained. Your practical approach is grounded in experience and careful analysis of what has worked before. You thrive in stable environments with clear expectations and established procedures. Your dedication to excellence and systematic approach makes you an invaluable contributor to any organization's success." 
+            },
+            "INTJ": { 
+                name: "The Visionary Architect", 
+                description: "You're a deep thinker who develops comprehensive strategies and long-term vision, comfortable with complexity and focused on systematic improvement. Your mind naturally sees patterns and possibilities that extend far into the future. You excel at creating frameworks and systems that can evolve and adapt over time. Your independent nature allows you to pursue innovative solutions without being swayed by popular opinion. You thrive on intellectual challenges and enjoy working on projects that require deep analysis and strategic thinking. Your combination of vision, analytical skills, and determination makes you a powerful architect of change and innovation." 
+            },
+            "ISFP": { 
+                name: "The Gentle Supporter", 
+                description: "You're quietly caring and practical, providing steady support to others while maintaining harmony and staying true to your deeply held values. Your empathy and sensitivity allow you to understand others' needs intuitively. You excel at creating beautiful, functional solutions that improve people's lives in tangible ways. Your preference for harmony doesn't diminish your strong personal convictions, and you can be surprisingly determined when your values are at stake. You thrive in supportive environments where you can work at your own pace on meaningful projects. Your combination of creativity, compassion, and practical skills makes you a valuable contributor to any team." 
+            },
+            "INFP": { 
+                name: "The Idealistic Creator", 
+                description: "You're driven by deep values and creativity, working toward meaningful change that aligns with your personal beliefs and vision for a better world. Your rich inner life fuels your creativity and provides the foundation for your strong moral compass. You excel at seeing potential for positive change and can inspire others through your authentic passion. Your empathy allows you to understand different perspectives and find common ground. You thrive when working on projects that have personal meaning and contribute to causes you care about. Your combination of idealism, creativity, and authenticity makes you a powerful advocate for positive change." 
+            },
+            "ISFJ": { 
+                name: "The Devoted Protector", 
+                description: "You're deeply caring and organized, creating secure environments where others feel understood, supported, and able to reach their potential. Your natural protectiveness extends to both individuals and traditions that you value. You excel at anticipating others' needs and providing practical support in ways that truly matter. Your attention to detail ensures that nothing important is overlooked, and your loyalty creates lasting relationships. You thrive in environments where you can provide stability and support to others. Your combination of empathy, reliability, and organizational skills makes you an indispensable part of any team or community." 
+            },
+            "INFJ": { 
+                name: "The Compassionate Visionary", 
+                description: "You combine deep empathy with intuitive vision, working toward a better world through understanding, inspiration, and systematic action toward meaningful goals. Your ability to see both the big picture and understand individual human needs makes you a unique bridge-builder. You excel at helping others understand themselves and their potential. Your intuitive insights often prove remarkably accurate, and you can sense underlying patterns and meanings that others miss. You thrive when working on projects that align with your values and have the potential to create lasting positive impact. Your combination of vision, empathy, and determination makes you a powerful catalyst for meaningful change." 
+            }
+        };
+
+        let currentQuestion = 0;
+        let answers = {
+            extroversion: 0,
+            introversion: 0,
+            sensing: 0,
+            intuition: 0,
+            thinking: 0,
+            feeling: 0,
+            judging: 0,
+            perceiving: 0
+        };
+
+        function initializeQuiz() {
+            displayQuestion();
+            updateProgress();
+            updateButtons();
+        }
+
+        function displayQuestion() {
+            // Hide all question containers
+            document.querySelectorAll('.question-container').forEach(container => {
+                container.classList.remove('active');
+            });
+
+            // Create new question container
+            const container = document.createElement('div');
+            container.className = 'question-container active';
+            container.innerHTML = `
+                <div class="question">${questions[currentQuestion].text}</div>
+                <div class="options">
+                    ${questions[currentQuestion].options.map(option => `
+                        <div class="option" data-dimension="${option.dimension}" data-value="${option.value}">
+                            <div class="option-text">${option.text}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            // Replace the current question
+            const quizContainer = document.getElementById('quiz-container');
+            const existingQuestion = quizContainer.querySelector('.question-container');
+            if (existingQuestion) {
+                quizContainer.replaceChild(container, existingQuestion);
+            }
+
+            // Add click handlers to options
+            container.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', selectOption);
+            });
+        }
+
+        function selectOption(event) {
+            const option = event.currentTarget;
+            const container = option.closest('.question-container');
+            
+            // Remove selected class from all options
+            container.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            option.classList.add('selected');
+            
+            // Store answer
+            const dimension = option.dataset.dimension;
+            const value = parseInt(option.dataset.value);
+            
+            // Store the current answer
+            window.currentAnswer = { dimension, value };
+            
+            updateButtons();
+        }
+
+        function nextQuestion() {
+            // Save current answer
+            if (window.currentAnswer) {
+                answers[window.currentAnswer.dimension] += window.currentAnswer.value;
+                window.currentAnswer = null;
+            }
+
+            currentQuestion++;
+            
+            if (currentQuestion >= questions.length) {
+                showResults();
+            } else {
+                displayQuestion();
+                updateProgress();
+                updateButtons();
+                updateQuestionCounter();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+                updateProgress();
+                updateButtons();
+                updateQuestionCounter();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion) / questions.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function updateButtons() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            prevBtn.disabled = currentQuestion === 0;
+            
+            const hasSelection = document.querySelector('.option.selected');
+            nextBtn.disabled = !hasSelection;
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.textContent = 'See Results';
+            } else {
+                nextBtn.textContent = 'Next';
+            }
+        }
+
+        function updateQuestionCounter() {
+            document.getElementById('current-question').textContent = currentQuestion + 1;
+            document.getElementById('total-questions').textContent = questions.length;
+        }
+
+        function showResults() {
+            // Calculate personality type using correct MBTI coding
+            const type = [
+                answers.extroversion > answers.introversion ? 'E' : 'I',
+                answers.sensing > answers.intuition ? 'S' : 'N',
+                answers.thinking > answers.feeling ? 'T' : 'F',
+                answers.judging > answers.perceiving ? 'J' : 'P'
+            ].join('');
+
+            // Display results
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('results').classList.add('active');
+            
+            document.getElementById('personality-code').textContent = type;
+            
+            const typeInfo = personalityTypes[type] || { 
+                name: "The Unique Individual", 
+                description: "You have a unique combination of traits that makes you special. Your balanced approach to life allows you to adapt to various situations effectively." 
+            };
+            
+            document.getElementById('type-name').textContent = typeInfo.name;
+            document.getElementById('type-description').textContent = typeInfo.description;
+
+            // Display dimension scores
+            const dimensionsDisplay = document.getElementById('dimensions-display');
+            dimensionsDisplay.innerHTML = `
+                <div class="dimension">
+                    <div class="dimension-name">${answers.extroversion > answers.introversion ? 'Extroversion (E)' : 'Introversion (I)'}</div>
+                    <div class="dimension-score">${Math.max(answers.extroversion, answers.introversion)}/${Math.max(answers.extroversion, answers.introversion) + Math.min(answers.extroversion, answers.introversion)}</div>
+                </div>
+                <div class="dimension">
+                    <div class="dimension-name">${answers.thinking > answers.feeling ? 'Thinking (T)' : 'Feeling (F)'}</div>
+                    <div class="dimension-score">${Math.max(answers.thinking, answers.feeling)}/${Math.max(answers.thinking, answers.feeling) + Math.min(answers.thinking, answers.feeling)}</div>
+                </div>
+                <div class="dimension">
+                    <div class="dimension-name">${answers.sensing > answers.intuition ? 'Sensing (S)' : 'Intuition (N)'}</div>
+                    <div class="dimension-score">${Math.max(answers.sensing, answers.intuition)}/${Math.max(answers.sensing, answers.intuition) + Math.min(answers.sensing, answers.intuition)}</div>
+                </div>
+                <div class="dimension">
+                    <div class="dimension-name">${answers.judging > answers.perceiving ? 'Judging (J)' : 'Perceiving (P)'}</div>
+                    <div class="dimension-score">${Math.max(answers.judging, answers.perceiving)}/${Math.max(answers.judging, answers.perceiving) + Math.min(answers.judging, answers.perceiving)}</div>
+                </div>
+            `;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            answers = {
+                extroversion: 0,
+                introversion: 0,
+                sensing: 0,
+                intuition: 0,
+                thinking: 0,
+                feeling: 0,
+                judging: 0,
+                perceiving: 0
+            };
+            window.currentAnswer = null;
+            
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('results').classList.remove('active');
+            
+            initializeQuiz();
+        }
+
+        // Initialize the quiz when the page loads
+        window.onload = initializeQuiz;
+    </script>
+</body>
+</html>
+            
